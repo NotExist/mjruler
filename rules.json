@@ -1,0 +1,1287 @@
+{
+  "version": "1.0",
+  "categories": [
+    { "id": "stakes",   "name": "賭注設定", "order": 1 },
+    { "id": "dealer",   "name": "莊家",     "order": 2 },
+    { "id": "gang",     "name": "槓",       "order": 3 },
+    { "id": "guoshui",  "name": "過水",     "order": 4 },
+    { "id": "scoring",  "name": "台數計算", "order": 5 },
+    { "id": "special",  "name": "特殊規則", "order": 6 },
+    { "id": "penalty",  "name": "罰則",     "order": 7 }
+  ],
+  "rules": [
+
+    {
+      "id": "stakes",
+      "name": "底台設定",
+      "category": "stakes",
+      "type": "group",
+      "presets": [
+        { "label": "50/20",   "values": { "base": 50,  "per_tai": 20  } },
+        { "label": "100/20",  "values": { "base": 100, "per_tai": 20  } },
+        { "label": "100/30",  "values": { "base": 100, "per_tai": 30  } },
+        { "label": "100/50",  "values": { "base": 100, "per_tai": 50  } },
+        { "label": "200/50",  "values": { "base": 200, "per_tai": 50  } },
+        { "label": "300/50",  "values": { "base": 300, "per_tai": 50  } },
+        { "label": "300/100", "values": { "base": 300, "per_tai": 100 } }
+      ],
+      "children": [
+        { "id": "base",    "name": "底", "type": "number", "default": 100, "min": 10, "step": 10, "unit": "元" },
+        { "id": "per_tai", "name": "台", "type": "number", "default": 50,  "min": 10, "step": 10, "unit": "元" },
+        {
+          "id": "max_tai",
+          "name": "滿台上限",
+          "desc": "超過上限以滿台計算",
+          "type": "select",
+          "options": [
+            { "label": "無上限", "value": "none" },
+            { "label": "4 台",  "value": "4" },
+            { "label": "8 台",  "value": "8" }
+          ],
+          "default": "none"
+        }
+      ]
+    },
+
+    {
+      "id": "dong_qian",
+      "name": "東錢",
+      "desc": "開門時額外收取的費用",
+      "category": "stakes",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        {
+          "id": "dong_qian_amount",
+          "name": "金額",
+          "type": "number",
+          "default": 100,
+          "min": 10,
+          "step": 10,
+          "unit": "元"
+        },
+        {
+          "id": "dong_qian_link",
+          "name": "東錢與底掛鉤",
+          "desc": "東錢金額自動跟隨底的設定",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+    {
+      "id": "dice_bonus",
+      "name": "骰子加倍",
+      "desc": "擲骰結果為豹子或全紅時結算加倍",
+      "category": "stakes",
+      "type": "toggle",
+      "default": false,
+      "children": [
+        {
+          "id": "dice_baozi",
+          "name": "豹子（三顆相同）",
+          "type": "select",
+          "options": [
+            { "label": "結算 ×2", "value": "double" },
+            { "label": "結算 ×3", "value": "triple" }
+          ],
+          "default": "double"
+        },
+        {
+          "id": "dice_quanhong",
+          "name": "全紅",
+          "type": "select",
+          "options": [
+            { "label": "結算 ×2", "value": "double" },
+            { "label": "結算 ×3", "value": "triple" }
+          ],
+          "default": "double"
+        }
+      ]
+    },
+
+
+    {
+      "id": "zhuang_jia_tai",
+      "name": "莊家台",
+      "category": "dealer",
+      "type": "number",
+      "default": 1,
+      "min": 0,
+      "max": 2,
+      "unit": "台"
+    },
+
+    {
+      "id": "lian_zhuang",
+      "name": "連莊",
+      "category": "dealer",
+      "type": "group",
+      "children": [
+        {
+          "id": "lian_zhuang_tai",
+          "name": "連莊加台",
+          "desc": "每連一次額外加台",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            {
+              "id": "lian_zhuang_tai_value",
+              "name": "每連台數",
+              "type": "number",
+              "default": 1,
+              "min": 1,
+              "max": 2,
+              "unit": "台"
+            },
+            {
+              "id": "lian_zhuang_cap",
+              "name": "連莊台上限",
+              "type": "select",
+              "options": [
+                { "label": "無上限", "value": "none" },
+                { "label": "最多 4 台", "value": "4" },
+                { "label": "最多 8 台", "value": "8" }
+              ],
+              "default": "none"
+            }
+          ]
+        },
+        {
+          "id": "lian_zhuang_la",
+          "name": "連莊拉莊",
+          "desc": "連莊時三家額外支付莊家連莊台",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "liu_ju_zhuang",
+      "name": "流局莊家處理",
+      "desc": "一般流局時莊家去留",
+      "category": "dealer",
+      "type": "select",
+      "options": [
+        { "label": "續莊",      "value": "continue" },
+        { "label": "連莊 +1",   "value": "plus1" },
+        { "label": "下莊",      "value": "down" }
+      ],
+      "default": "continue"
+    },
+
+
+    {
+      "id": "minggang_zimo",
+      "name": "明槓自摸",
+      "desc": "明槓補牌後自摸是否可胡",
+      "category": "gang",
+      "type": "select",
+      "options": [
+        { "label": "不可胡",           "value": "deny" },
+        { "label": "可胡，算自摸",     "value": "zimo" },
+        { "label": "可胡，算放槍",     "value": "fangqiang" }
+      ],
+      "default": "deny"
+    },
+
+    {
+      "id": "qiang_minggang",
+      "name": "搶明槓",
+      "desc": "加槓時他家可搶槓胡",
+      "category": "gang",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        {
+          "id": "qiang_minggang_gui",
+          "name": "搶明槓算誰放",
+          "type": "select",
+          "options": [
+            { "label": "算槓者放槍", "value": "gang_player" },
+            { "label": "算自摸",     "value": "zimo" }
+          ],
+          "default": "gang_player"
+        },
+        {
+          "id": "minggang_bu_ji_qiang",
+          "name": "明槓不計搶",
+          "desc": "搶明槓直接算胡牌優先，不另計搶槓台",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "gang_shang_jia",
+      "name": "不可槓上家",
+      "desc": "禁止槓上家打出的牌",
+      "category": "gang",
+      "type": "toggle",
+      "default": true
+    },
+
+    {
+      "id": "ting_pai_gang",
+      "name": "聽牌可槓",
+      "desc": "聽牌後是否還可以開槓",
+      "category": "gang",
+      "type": "toggle",
+      "default": true
+    },
+
+    {
+      "id": "gang_show",
+      "name": "暗槓展示",
+      "desc": "暗槓後是否需要展示牌面給其他家看",
+      "category": "gang",
+      "type": "toggle",
+      "default": false
+    },
+
+    {
+      "id": "chi_bu_jie_gang",
+      "name": "吃不接槓",
+      "desc": "同巡吃牌後不可再開槓",
+      "category": "gang",
+      "type": "toggle",
+      "default": false
+    },
+
+
+    {
+      "id": "guoshui",
+      "name": "過水",
+      "desc": "可胡不胡後限制再胡",
+      "category": "guoshui",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        {
+          "id": "guoshui_scope",
+          "name": "過水範圍",
+          "type": "select",
+          "options": [
+            { "label": "僅過該張",   "value": "single" },
+            { "label": "同巡皆過",   "value": "round" }
+          ],
+          "default": "single"
+        },
+        {
+          "id": "guoshui_resolve",
+          "name": "解過水方式",
+          "type": "select",
+          "options": [
+            { "label": "打出一張非胡牌", "value": "discard" },
+            { "label": "摸入一張非胡牌", "value": "draw" }
+          ],
+          "default": "discard"
+        },
+        {
+          "id": "guoshui_gang_resolve",
+          "name": "拿花或明槓可解過水",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "guoshui_jiagang_resolve",
+          "name": "加槓可解過水",
+          "desc": "加槓非胡牌視同打出非胡牌",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "guoshui_angang_resolve",
+          "name": "暗槓可解過水",
+          "desc": "暗槓未暴露牌面，是否仍可解過水",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "guoshui_qianggang",
+          "name": "過搶槓視同過水",
+          "desc": "放棄搶槓機會是否等同過水",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+
+    {
+      "id": "winning_method",
+      "name": "贏法台",
+      "category": "scoring",
+      "type": "group",
+      "children": [
+        { "id": "zimo_tai",   "name": "自摸",   "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" },
+        { "id": "menqing_tai", "name": "門清", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" },
+        { "id": "buqiu_tai",  "name": "不求人", "type": "number", "default": 1, "min": 0, "max": 2, "unit": "台" },
+        {
+          "id": "menqing_yimo_san",
+          "name": "門清一摸三",
+          "desc": "門清自摸時合併計算門清＋自摸＋不求人",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "gangshang_kaihua",
+          "name": "槓上開花",
+          "desc": "槓後補牌自摸",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "gangshang_kaihua_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        },
+        {
+          "id": "qianggang_tai",
+          "name": "搶槓",
+          "desc": "搶他家加槓的牌胡牌",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "qianggang_tai_value", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        },
+        {
+          "id": "haidi_laoyu",
+          "name": "海底撈魚",
+          "desc": "摸最後一張牌自摸",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "haidi_laoyu_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" },
+            {
+              "id": "haidi_def",
+              "name": "海底定義",
+              "type": "select",
+              "options": [
+                { "label": "每人最後一張", "value": "per_player" },
+                { "label": "全場最後一張", "value": "last_tile" }
+              ],
+              "default": "last_tile"
+            },
+            {
+              "id": "haidi_lingshang",
+              "name": "海底疊嶺上",
+              "desc": "海底自摸與槓上開花可同時計算",
+              "type": "toggle",
+              "default": false
+            }
+          ]
+        },
+        {
+          "id": "hedi_laoyu",
+          "name": "河底撈魚",
+          "desc": "胡最後一張捨牌",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "hedi_laoyu_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        },
+        {
+          "id": "yifa",
+          "name": "一發",
+          "desc": "宣告聽牌後第一巡即胡",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "yifa_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "tiandi",
+      "name": "天地人胡／聽",
+      "category": "scoring",
+      "type": "group",
+      "children": [
+        {
+          "id": "tianhu",
+          "name": "天胡",
+          "desc": "莊家配牌完直接胡牌",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "tianhu_tai", "name": "台數", "type": "number", "default": 16, "min": 8, "max": 32, "unit": "台" }
+          ]
+        },
+        {
+          "id": "dihu",
+          "name": "地胡",
+          "desc": "海底無人吃碰槓，4 張內自摸",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "dihu_tai", "name": "台數", "type": "number", "default": 16, "min": 8, "max": 32, "unit": "台" }
+          ]
+        },
+        {
+          "id": "renhu",
+          "name": "人胡",
+          "desc": "海底無人吃碰槓，4 張內胡他家",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "renhu_tai", "name": "台數", "type": "number", "default": 16, "min": 8, "max": 32, "unit": "台" }
+          ]
+        },
+        {
+          "id": "tianting",
+          "name": "天聽",
+          "desc": "配牌完即聽牌（人人可）",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "tianting_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" },
+            {
+              "id": "tianting_announce",
+              "name": "天聽需宣告",
+              "type": "toggle",
+              "default": true
+            },
+            {
+              "id": "tianting_bu_tinghuan",
+              "name": "天聽換張作廢",
+              "desc": "天聽後過水或換張則宣告作廢",
+              "type": "toggle",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "diting",
+          "name": "地聽",
+          "desc": "首巡無人吃碰槓，摸打第一張後即聽",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "diting_tai", "name": "台數", "type": "number", "default": 4, "min": 2, "max": 8, "unit": "台" },
+            {
+              "id": "diting_announce",
+              "name": "地聽需宣告",
+              "type": "toggle",
+              "default": true
+            },
+            {
+              "id": "diting_menqing",
+              "name": "天地聽不計門清",
+              "desc": "天聽地聽已隱含門清，不另計門清台",
+              "type": "toggle",
+              "default": true
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "migi",
+      "name": "MIGI（立直）",
+      "desc": "宣告聽牌，鎖定手牌不可換張",
+      "category": "scoring",
+      "type": "toggle",
+      "default": false,
+      "children": [
+        { "id": "migi_tai", "name": "台數", "type": "number", "default": 4, "min": 1, "max": 8, "unit": "台" },
+        {
+          "id": "migi_limit",
+          "name": "聽牌張數限制",
+          "type": "select",
+          "options": [
+            { "label": "不限",       "value": "none" },
+            { "label": "4 張以內",   "value": "4" },
+            { "label": "5 張以內",   "value": "5" },
+            { "label": "8 張以內",   "value": "8" },
+            { "label": "9 張以內",   "value": "9" }
+          ],
+          "default": "none"
+        },
+        {
+          "id": "migi_menqing",
+          "name": "MIGI 必須門清",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "migi_guoshui",
+          "name": "宣告後禁過水轉張",
+          "desc": "宣告後可胡不胡仍計 MIGI，但不視為過水",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "migi_bao",
+          "name": "MIGI 過水包",
+          "type": "select",
+          "options": [
+            { "label": "不包",           "value": "none" },
+            { "label": "過水即包",       "value": "immediate" },
+            { "label": "過水又胡才包",   "value": "on_win" }
+          ],
+          "default": "none"
+        },
+        {
+          "id": "migi_tiandi_mutex",
+          "name": "與天地聽互斥",
+          "desc": "天聽或地聽時不另計 MIGI 台",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "migi_angang",
+          "name": "暗槓後可 MIGI",
+          "desc": "開場暗槓非叫牌，仍可宣告 MIGI",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "migi_buqiu",
+          "name": "MIGI 另計不求",
+          "desc": "MIGI 必門清，自摸時是否另計不求人",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "hand_pattern",
+      "name": "牌面台",
+      "category": "scoring",
+      "type": "group",
+      "children": [
+        {
+          "id": "jianzi_jiantai",
+          "name": "見字見台",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "zhenghua_tai",
+          "name": "正花見台",
+          "desc": "持有對應座位花牌得台",
+          "type": "toggle",
+          "default": true,
+          "mutex": ["hua_wu_tai"]
+        },
+        {
+          "id": "hua_wu_tai",
+          "name": "花無台",
+          "desc": "花牌不計任何台數",
+          "type": "toggle",
+          "default": false,
+          "mutex": ["zhenghua_tai"]
+        },
+        {
+          "id": "hua_gang",
+          "name": "花槓",
+          "desc": "持有四張同類花（春夏秋冬或梅蘭竹菊）",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            {
+              "id": "hua_gang_tai",
+              "name": "台數",
+              "type": "select",
+              "options": [
+                { "label": "1 台", "value": "1" },
+                { "label": "2 台", "value": "2" }
+              ],
+              "default": "2"
+            },
+            {
+              "id": "hua_gang_zhenghua",
+              "name": "花槓另計正花",
+              "desc": "花槓台數之外，每張正花仍各計 1 台",
+              "type": "toggle",
+              "default": false
+            }
+          ]
+        },
+        {
+          "id": "pinghu",
+          "name": "平胡",
+          "type": "group",
+          "children": [
+            {
+              "id": "pinghu_def",
+              "name": "平胡定義",
+              "type": "select",
+              "options": [
+                { "label": "完全無字花刻、聽雙頭", "value": "strict" },
+                { "label": "無字花刻即可",         "value": "no_honor" },
+                { "label": "抓得出眼睛即可",       "value": "loose" }
+              ],
+              "default": "strict"
+            },
+            {
+              "id": "pinghu_zimo",
+              "name": "平胡可自摸",
+              "type": "toggle",
+              "default": true
+            },
+            { "id": "pinghu_tai", "name": "台數", "type": "number", "default": 2, "min": 1, "max": 4, "unit": "台" }
+          ]
+        },
+        {
+          "id": "du_ting",
+          "name": "獨聽",
+          "type": "group",
+          "children": [
+            {
+              "id": "du_ting_def",
+              "name": "獨聽定義",
+              "desc": "活獨＝僅一張可胡但牌面尚有；死獨＝該張已無活牌",
+              "type": "select",
+              "options": [
+                { "label": "活獨 1 台",                 "value": "alive_1" },
+                { "label": "活獨 1 台、死獨 2 台",      "value": "alive1_dead2" },
+                { "label": "抓得出即算",                 "value": "any" }
+              ],
+              "default": "alive_1"
+            }
+          ]
+        },
+        {
+          "id": "pengpeng_hu",
+          "name": "碰碰胡（對對胡）",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "pengpeng_hu_tai", "name": "台數", "type": "number", "default": 4, "min": 2, "max": 8, "unit": "台" },
+            {
+              "id": "pengpeng_hu_dandiao",
+              "name": "碰碰胡可單吊",
+              "type": "toggle",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "quanqiu",
+          "name": "全求",
+          "desc": "所有組合皆由吃碰取得，僅剩一張自摸",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "quanqiu_tai", "name": "台數", "type": "number", "default": 2, "min": 1, "max": 4, "unit": "台" },
+            {
+              "id": "quanqiu_dandiao",
+              "name": "全求含單吊台",
+              "type": "toggle",
+              "default": true
+            }
+          ]
+        },
+        {
+          "id": "banqiu",
+          "name": "半求",
+          "desc": "剩一張單吊自摸，但非全由吃碰取得",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "banqiu_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        },
+        {
+          "id": "anke",
+          "name": "暗刻",
+          "type": "group",
+          "children": [
+            { "id": "anke_tai", "name": "每組暗刻台數", "type": "number", "default": 0, "min": 0, "max": 1, "unit": "台" },
+            {
+              "id": "wu_anke",
+              "name": "五暗刻",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "wu_anke_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" },
+                {
+                  "id": "wu_anke_menqing",
+                  "name": "五暗刻另計門清",
+                  "type": "toggle",
+                  "default": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "yise",
+          "name": "一色",
+          "type": "group",
+          "children": [
+            {
+              "id": "hunyi_se",
+              "name": "混一色",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "hunyi_se_tai", "name": "台數", "type": "number", "default": 4, "min": 2, "max": 8, "unit": "台" }
+              ]
+            },
+            {
+              "id": "qingyi_se",
+              "name": "清一色",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "qingyi_se_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sanyuan",
+          "name": "三元",
+          "type": "group",
+          "children": [
+            {
+              "id": "xiao_sanyuan",
+              "name": "小三元",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "xiao_sanyuan_tai", "name": "台數", "type": "number", "default": 4, "min": 2, "max": 8, "unit": "台" }
+              ]
+            },
+            {
+              "id": "da_sanyuan",
+              "name": "大三元",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "da_sanyuan_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sixi",
+          "name": "四喜",
+          "type": "group",
+          "children": [
+            {
+              "id": "xiao_sixi",
+              "name": "小四喜",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "xiao_sixi_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" }
+              ]
+            },
+            {
+              "id": "da_sixi",
+              "name": "大四喜",
+              "type": "toggle",
+              "default": true,
+              "children": [
+                { "id": "da_sixi_tai", "name": "台數", "type": "number", "default": 16, "min": 8, "max": 32, "unit": "台" },
+                {
+                  "id": "da_sixi_feng",
+                  "name": "大四喜含門圈風",
+                  "desc": "大四喜台數已含門風和圈風台，不另計",
+                  "type": "toggle",
+                  "default": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ba_dui_ban",
+          "name": "八對半（哩咕哩咕）",
+          "desc": "七對加一刻",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "ba_dui_ban_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" }
+          ]
+        },
+        {
+          "id": "yilu_guixi",
+          "name": "一路歸西",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "yilu_guixi_tai", "name": "台數", "type": "number", "default": 2, "min": 1, "max": 4, "unit": "台" }
+          ]
+        },
+        {
+          "id": "yanpai_jiatai",
+          "name": "眼牌加台",
+          "desc": "押聽牌（立直），掩蓋手中一張牌加台",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "yanpai_jiatai_tai", "name": "台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" },
+            {
+              "id": "yanpai_timing",
+              "name": "眼牌時機",
+              "type": "select",
+              "options": [
+                { "label": "宣告時",       "value": "announce" },
+                { "label": "看到牌時",     "value": "on_see" },
+                { "label": "摸到牌時",     "value": "on_draw" }
+              ],
+              "default": "announce"
+            },
+            {
+              "id": "yanpai_jiagang",
+              "name": "眼牌可加槓",
+              "desc": "持有眼牌時能否對該組加槓",
+              "type": "toggle",
+              "default": false
+            },
+            {
+              "id": "yanpai_mode",
+              "name": "眼牌操作",
+              "desc": "眼牌限制摸打或可自由操作",
+              "type": "select",
+              "options": [
+                { "label": "僅能摸打",             "value": "draw_discard" },
+                { "label": "可吃碰槓",             "value": "free" }
+              ],
+              "default": "draw_discard"
+            }
+          ]
+        },
+        {
+          "id": "qingshui_jitang",
+          "name": "清水變雞湯",
+          "desc": "零台胡牌時補算基本台數",
+          "type": "toggle",
+          "default": false,
+          "children": [
+            { "id": "qingshui_jitang_tai", "name": "補算台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+          ]
+        },
+        {
+          "id": "jian_pai_bu_gei_hu",
+          "name": "見牌不給胡",
+          "desc": "露出特定搭子後禁胡相關牌（如露 78 禁胡 5678）",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "xian_pai_qiang",
+          "name": "現牌需嗆",
+          "desc": "見到的現牌是否需要嗆聽",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+    {
+      "id": "gangshang_zimo_tai",
+      "name": "槓上自摸台",
+      "desc": "暗槓補牌後自摸額外加的台數",
+      "category": "scoring",
+      "type": "number",
+      "default": 1,
+      "min": 0,
+      "max": 2,
+      "unit": "台"
+    },
+
+
+    {
+      "id": "sigang_he",
+      "name": "四槓和（流局）",
+      "desc": "場上出現四組槓時流局",
+      "category": "special",
+      "type": "toggle",
+      "default": true,
+      "mutex": ["sigang_hu"],
+      "children": [
+        {
+          "id": "sigang_he_zhuang",
+          "name": "四槓和莊家處理",
+          "type": "select",
+          "options": [
+            { "label": "續莊",      "value": "continue" },
+            { "label": "連莊 +1",   "value": "plus1" }
+          ],
+          "default": "continue"
+        }
+      ]
+    },
+
+    {
+      "id": "sigang_hu",
+      "name": "四槓胡（特殊胡）",
+      "desc": "同一家開四組槓可宣告胡牌",
+      "category": "special",
+      "type": "toggle",
+      "default": false,
+      "mutex": ["sigang_he"],
+      "children": [
+        { "id": "sigang_hu_tai", "name": "台數", "type": "number", "default": 16, "min": 8, "max": 32, "unit": "台" }
+      ]
+    },
+
+    {
+      "id": "sifeng_lian",
+      "name": "四風連打和",
+      "desc": "首巡四家打出同一張風牌即流局",
+      "category": "special",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        {
+          "id": "sifeng_lian_zhuang",
+          "name": "四風連打莊家處理",
+          "type": "select",
+          "options": [
+            { "label": "續莊",      "value": "continue" },
+            { "label": "連莊 +1",   "value": "plus1" }
+          ],
+          "default": "continue"
+        }
+      ]
+    },
+
+    {
+      "id": "qi_qiang_yi",
+      "name": "七搶一",
+      "desc": "持有七張花，搶到第八張即胡",
+      "category": "special",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        { "id": "qi_qiang_yi_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" },
+        {
+          "id": "qi_qiang_yi_hand",
+          "name": "手牌有胡另計",
+          "desc": "搶花時手牌若已胡，是否另計手牌台數",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "qi_qiang_yi_dealer",
+          "name": "莊家台另計",
+          "desc": "七搶一除花胡台外，莊家台是否另計",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "hua_hu",
+      "name": "花胡",
+      "desc": "持有八張花牌即胡",
+      "category": "special",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        { "id": "hua_hu_tai", "name": "台數", "type": "number", "default": 8, "min": 4, "max": 16, "unit": "台" },
+        {
+          "id": "hua_hu_continue",
+          "name": "花胡續行",
+          "desc": "花胡後遊戲是否繼續",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "id": "hua_hu_peipai",
+          "name": "配牌花胡另計",
+          "desc": "配牌階段即湊滿八花，額外加台",
+          "type": "toggle",
+          "default": true,
+          "children": [
+            { "id": "hua_hu_peipai_tai", "name": "配牌花胡額外台數", "type": "number", "default": 4, "min": 2, "max": 8, "unit": "台" }
+          ]
+        },
+        {
+          "id": "hua_hu_manhua",
+          "name": "滿花（未補牌）",
+          "desc": "補花階段花牌湊滿但尚未補完，是否直接算花胡",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "hua_hu_procedure",
+          "name": "花胡程序須完成",
+          "desc": "花胡時補花程序是否必須全部完成",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "yi_pao_duo_xiang",
+      "name": "一炮多響",
+      "desc": "一張捨牌多家可胡時的處理",
+      "category": "special",
+      "type": "select",
+      "options": [
+        { "label": "僅放銃者對家（頭家）",   "value": "head" },
+        { "label": "全部可胡",               "value": "all" },
+        { "label": "僅一家（依序位）",       "value": "one_by_order" }
+      ],
+      "default": "head"
+    },
+
+    {
+      "id": "liu_ju",
+      "name": "流局",
+      "category": "special",
+      "type": "group",
+      "children": [
+        {
+          "id": "liu_ju_remain",
+          "name": "流局剩餘張數",
+          "desc": "牌墩剩餘幾張時流局",
+          "type": "number",
+          "default": 16,
+          "min": 0,
+          "max": 20,
+          "unit": "張"
+        },
+        {
+          "id": "tie_ba_dun",
+          "name": "鐵八墩海底花不可摸",
+          "desc": "牌墩剩八墩時，海底花牌不可補摸",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+    {
+      "id": "wei_pan",
+      "name": "尾盤處理",
+      "desc": "牌局末段的特殊限制",
+      "category": "special",
+      "type": "toggle",
+      "default": false,
+      "children": [
+        {
+          "id": "wei_pan_limit",
+          "name": "剩餘張數",
+          "desc": "剩幾張起禁止吃碰",
+          "type": "number",
+          "default": 4,
+          "min": 2,
+          "max": 8,
+          "unit": "張"
+        }
+      ]
+    },
+
+    {
+      "id": "da_hua_pai",
+      "name": "打花牌",
+      "desc": "打出花牌的處理方式",
+      "category": "special",
+      "type": "select",
+      "options": [
+        { "label": "算相（過水可胡）",               "value": "xiang" },
+        { "label": "收回補牌",                       "value": "take_back" },
+        { "label": "不收回但強補強打，可被胡（算相）", "value": "force_draw" }
+      ],
+      "default": "xiang"
+    },
+
+
+    {
+      "id": "zha_hu",
+      "name": "詐胡",
+      "category": "penalty",
+      "type": "group",
+      "children": [
+        {
+          "id": "zha_hu_penalty",
+          "name": "賠付方式",
+          "type": "select",
+          "options": [
+            { "label": "一底三台",     "value": "1b3t" },
+            { "label": "一底五台",     "value": "1b5t" },
+            { "label": "一底八台",     "value": "1b8t" },
+            { "label": "依檯面台數",   "value": "table" }
+          ],
+          "default": "1b3t"
+        },
+        {
+          "id": "zha_hu_scope",
+          "name": "賠付對象",
+          "type": "select",
+          "options": [
+            { "label": "賠三家（各別計算）",   "value": "each" },
+            { "label": "一套賠三家",           "value": "one_set" }
+          ],
+          "default": "each"
+        },
+        {
+          "id": "zha_hu_dealer",
+          "name": "莊家處理",
+          "type": "select",
+          "options": [
+            { "label": "續莊",           "value": "continue" },
+            { "label": "連莊 +1",        "value": "plus1" },
+            { "label": "下莊",           "value": "down" },
+            { "label": "有收到錢續莊",   "value": "if_paid" }
+          ],
+          "default": "down"
+        },
+        {
+          "id": "zha_hu_bu_lan",
+          "name": "詐胡不攔真胡",
+          "desc": "詐胡宣告不影響同時可胡的其他家",
+          "type": "toggle",
+          "default": true
+        }
+      ]
+    },
+
+    {
+      "id": "bao_pai",
+      "name": "包牌",
+      "desc": "特定條件下需包賠",
+      "category": "penalty",
+      "type": "group",
+      "children": [
+        {
+          "id": "bao_pai_trigger",
+          "name": "包牌觸發",
+          "desc": "幾相開始包",
+          "type": "select",
+          "options": [
+            { "label": "一相即包",   "value": "1" },
+            { "label": "二相才包",   "value": "2" }
+          ],
+          "default": "2"
+        },
+        {
+          "id": "bao_pai_amount",
+          "name": "包牌賠付",
+          "type": "select",
+          "options": [
+            { "label": "一底三台",     "value": "1b3t" },
+            { "label": "一底八台",     "value": "1b8t" },
+            { "label": "依檯面台數",   "value": "table" },
+            { "label": "無底算台",     "value": "tai_only" }
+          ],
+          "default": "1b3t"
+        },
+        {
+          "id": "bao_pai_zhuang",
+          "name": "莊家台另計",
+          "desc": "包牌賠付之外，莊家台是否額外計算",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "id": "e_yi_bao",
+          "name": "惡意打花算包",
+          "desc": "惡意打出花牌（如打花讓他家補花成花胡）算二相包",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+    {
+      "id": "jia_mi",
+      "name": "假咪（假溜）",
+      "desc": "流局時檢查是否假裝聽牌",
+      "category": "penalty",
+      "type": "toggle",
+      "default": true,
+      "children": [
+        {
+          "id": "jia_mi_penalty",
+          "name": "假咪罰則",
+          "type": "select",
+          "options": [
+            { "label": "賠一底",       "value": "1b" },
+            { "label": "賠一底三台",   "value": "1b3t" },
+            { "label": "包牌",         "value": "bao" }
+          ],
+          "default": "1b"
+        },
+        {
+          "id": "jia_mi_check",
+          "name": "檢查時機",
+          "desc": "流局才檢查假咪，或隨時可檢查",
+          "type": "select",
+          "options": [
+            { "label": "僅流局時",   "value": "liu_ju" },
+            { "label": "隨時可查",   "value": "anytime" }
+          ],
+          "default": "liu_ju"
+        }
+      ]
+    },
+
+    {
+      "id": "xiangong",
+      "name": "相公",
+      "desc": "多牌或少牌時的處理",
+      "category": "penalty",
+      "type": "group",
+      "children": [
+        {
+          "id": "xiangong_action",
+          "name": "相公處理",
+          "type": "select",
+          "options": [
+            { "label": "停胡陪打",               "value": "no_win" },
+            { "label": "停胡停碰停吃",           "value": "no_action" },
+            { "label": "需立即宣告，停胡陪打",   "value": "announce_no_win" }
+          ],
+          "default": "no_win"
+        },
+        {
+          "id": "fei_guan_shengfu_gang",
+          "name": "非關勝負需檢查槓",
+          "desc": "相公者的槓是否仍需結算",
+          "type": "toggle",
+          "default": false
+        }
+      ]
+    },
+
+    {
+      "id": "cang_hua",
+      "name": "藏花算包",
+      "desc": "故意不補花被發現時需包賠",
+      "category": "penalty",
+      "type": "toggle",
+      "default": true
+    },
+
+    {
+      "id": "jiao_peng_bu_peng",
+      "name": "叫碰不碰罰台",
+      "desc": "喊碰後又不碰，罰 1 台",
+      "category": "penalty",
+      "type": "toggle",
+      "default": false,
+      "children": [
+        { "id": "jiao_peng_bu_peng_tai", "name": "罰台數", "type": "number", "default": 1, "min": 1, "max": 2, "unit": "台" }
+      ]
+    },
+
+    {
+      "id": "jia_liu",
+      "name": "假遛防惡碰",
+      "desc": "假裝要出牌引誘碰牌的防範規則",
+      "category": "penalty",
+      "type": "toggle",
+      "default": false
+    }
+
+  ]
+}

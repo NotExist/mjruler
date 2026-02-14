@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "麻將規則描述格式",
+  "description": "台灣十六張麻將 Home Rule 規則描述 JSON Schema v1.0",
+  "type": "object",
+  "required": ["version", "categories", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema 版本號",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "categories": {
+      "type": "array",
+      "description": "規則分類列表",
+      "items": { "$ref": "#/$defs/category" },
+      "minItems": 1
+    },
+    "rules": {
+      "type": "array",
+      "description": "頂層規則列表",
+      "items": { "$ref": "#/$defs/rule" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "category": {
+      "type": "object",
+      "description": "規則分類",
+      "required": ["id", "name", "order"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "分類唯一識別碼（snake_case）"
+        },
+        "name": {
+          "type": "string",
+          "description": "分類顯示名稱"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "排序順序（數字越小越前）"
+        }
+      }
+    },
+    "when_condition": {
+      "type": "object",
+      "description": "跨層級條件啟用：當指定規則的值符合時才顯示",
+      "required": ["rule", "is"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "type": "string",
+          "description": "依賴的規則 ID"
+        },
+        "is": {
+          "description": "規則需等於的值（toggle 用 boolean，select 用 value 字串，number 用數值）",
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string" },
+            { "type": "number" }
+          ]
+        }
+      }
+    },
+    "select_option": {
+      "type": "object",
+      "description": "select 型別的選項",
+      "required": ["label", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "選項顯示文字"
+        },
+        "value": {
+          "type": "string",
+          "description": "選項值（程式用）"
+        }
+      }
+    },
+    "preset": {
+      "type": "object",
+      "description": "group 型別的快選預設組合",
+      "required": ["label", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "預設組合顯示文字"
+        },
+        "values": {
+          "type": "object",
+          "description": "子規則 ID 對應值的映射",
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          }
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "description": "規則定義（支援 toggle / select / number / group 四種型別）",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "規則唯一識別碼（snake_case）"
+        },
+        "name": {
+          "type": "string",
+          "description": "規則顯示名稱"
+        },
+        "desc": {
+          "type": "string",
+          "description": "補充說明文字"
+        },
+        "category": {
+          "type": "string",
+          "description": "所屬分類 ID（子規則繼承父規則，可省略）"
+        },
+        "type": {
+          "enum": ["toggle", "select", "number", "group"],
+          "description": "規則型別"
+        },
+        "when": {
+          "$ref": "#/$defs/when_condition"
+        },
+        "mutex": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "互斥規則 ID 列表（需雙向宣告）"
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "子規則列表（toggle 啟用時展開，select 搭配 when 控制顯示）"
+        },
+        "default": {
+          "description": "預設值（toggle: boolean, select: string, number: number, group 無此欄位）",
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string" },
+            { "type": "number" }
+          ]
+        },
+        "options": {
+          "type": "array",
+          "description": "select 型別的選項列表",
+          "items": { "$ref": "#/$defs/select_option" },
+          "minItems": 2
+        },
+        "min": {
+          "type": ["number", "null"],
+          "description": "number 型別的最小值（null 或省略表示不限）"
+        },
+        "max": {
+          "type": ["number", "null"],
+          "description": "number 型別的最大值（null 或省略表示不限）；min === max 時 UI 顯示為固定值"
+        },
+        "step": {
+          "type": ["number", "null"],
+          "description": "number 型別的步進值（null 或省略表示不限）"
+        },
+        "unit": {
+          "type": "string",
+          "description": "number 型別的單位顯示文字"
+        },
+        "presets": {
+          "type": "array",
+          "description": "group 型別的快選預設組合",
+          "items": { "$ref": "#/$defs/preset" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "toggle" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["default"],
+            "properties": {
+              "default": { "type": "boolean" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "select" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["default", "options"],
+            "properties": {
+              "default": { "type": "string" },
+              "options": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/select_option" },
+                "minItems": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "number" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["default"],
+            "properties": {
+              "default": { "type": "number" },
+              "min": { "type": ["number", "null"] },
+              "max": { "type": ["number", "null"] },
+              "step": { "type": ["number", "null"] },
+              "unit": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "group" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "presets": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/preset" }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
