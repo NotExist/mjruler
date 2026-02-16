@@ -44,6 +44,11 @@
           "type": "integer",
           "minimum": 0,
           "description": "排序順序（數字越小越前）"
+        },
+        "parent": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "父分類 ID（省略表示頂層分類）"
         }
       }
     },

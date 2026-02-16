@@ -1,13 +1,17 @@
 {
   "version": "1.0",
   "categories": [
-    { "id": "stakes",   "name": "賭注設定", "order": 1 },
-    { "id": "dealer",   "name": "莊家",     "order": 2 },
-    { "id": "gang",     "name": "槓",       "order": 3 },
-    { "id": "guoshui",  "name": "過水",     "order": 4 },
-    { "id": "scoring",  "name": "台數計算", "order": 5 },
-    { "id": "special",  "name": "特殊規則", "order": 6 },
-    { "id": "penalty",  "name": "罰則",     "order": 7 }
+    { "id": "scoring_main",  "name": "台數",       "order": 1 },
+    { "id": "scoring",       "name": "台數計算",   "order": 1, "parent": "scoring_main" },
+    { "id": "special_win",   "name": "特殊勝利",   "order": 2, "parent": "scoring_main" },
+
+    { "id": "venue",         "name": "場地規則",   "order": 2 },
+    { "id": "stakes",        "name": "賭注設定",   "order": 1, "parent": "venue" },
+    { "id": "dealer",        "name": "莊家",       "order": 2, "parent": "venue" },
+    { "id": "gang",          "name": "槓",         "order": 3, "parent": "venue" },
+    { "id": "guoshui",       "name": "過水",       "order": 4, "parent": "venue" },
+    { "id": "special_flow",  "name": "流局與特殊", "order": 5, "parent": "venue" },
+    { "id": "penalty",       "name": "罰則",       "order": 6, "parent": "venue" }
   ],
   "rules": [
 
@@ -898,7 +902,7 @@
       "id": "sigang_he",
       "name": "四槓和（流局）",
       "desc": "場上出現四組槓時流局",
-      "category": "special",
+      "category": "special_flow",
       "type": "toggle",
       "default": true,
       "mutex": ["sigang_hu"],
@@ -920,7 +924,7 @@
       "id": "sigang_hu",
       "name": "四槓胡（特殊胡）",
       "desc": "同一家開四組槓可宣告胡牌",
-      "category": "special",
+      "category": "special_win",
       "type": "toggle",
       "default": false,
       "mutex": ["sigang_he"],
@@ -933,7 +937,7 @@
       "id": "sifeng_lian",
       "name": "四風連打和",
       "desc": "首巡四家打出同一張風牌即流局",
-      "category": "special",
+      "category": "special_flow",
       "type": "toggle",
       "default": true,
       "children": [
@@ -954,7 +958,7 @@
       "id": "qi_qiang_yi",
       "name": "七搶一",
       "desc": "持有七張花，搶到第八張即胡",
-      "category": "special",
+      "category": "special_win",
       "type": "toggle",
       "default": true,
       "children": [
@@ -980,7 +984,7 @@
       "id": "hua_hu",
       "name": "花胡",
       "desc": "持有八張花牌即胡",
-      "category": "special",
+      "category": "special_win",
       "type": "toggle",
       "default": true,
       "children": [
@@ -1023,7 +1027,7 @@
       "id": "yi_pao_duo_xiang",
       "name": "一炮多響",
       "desc": "一張捨牌多家可胡時的處理",
-      "category": "special",
+      "category": "special_flow",
       "type": "select",
       "options": [
         { "label": "僅放銃者對家（頭家）",   "value": "head" },
@@ -1036,7 +1040,7 @@
     {
       "id": "liu_ju",
       "name": "流局",
-      "category": "special",
+      "category": "special_flow",
       "type": "group",
       "children": [
         {
@@ -1063,7 +1067,7 @@
       "id": "wei_pan",
       "name": "尾盤處理",
       "desc": "牌局末段的特殊限制",
-      "category": "special",
+      "category": "special_flow",
       "type": "toggle",
       "default": false,
       "children": [
@@ -1084,7 +1088,7 @@
       "id": "da_hua_pai",
       "name": "打花牌",
       "desc": "打出花牌的處理方式",
-      "category": "special",
+      "category": "special_flow",
       "type": "select",
       "options": [
         { "label": "算相（過水可胡）",               "value": "xiang" },
