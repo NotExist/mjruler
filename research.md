@@ -249,3 +249,5 @@ loop 收斂過程的研究紀錄，按批次累積。結論已濃縮進 rules-fl
 
 ## 補充資料
 - 十三么參考影片（user 提供，2026-07-29）：https://www.instagram.com/reel/Bkb1JH5llDY/ —— Instagram 需登入、WebFetch 無法抓取，內容細節待 user 補述後併入條目。
+- twmahjong.com（user 提供，2026-07-29）：香港「台灣麻雀」（MHV 系）規則整理站，番數表含十三么 10 番、正花/爛花、清一色 12 番等——即 B5 引用的 twmahjong.com/twmj/TWMJ.pdf 本站。可作港式台灣麻雀系的參考來源。
+- 十三么十六張版定義確認（user 補述 IG 影片內容）：十三么核心＋隨意多一搭（一吃或一碰），湊滿 17 張；user 設計考量＝十六張湊 13 張核心較易、13 台恐偏高。
