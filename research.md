@@ -272,3 +272,4 @@ loop 收斂過程的研究紀錄，按批次累積。結論已濃縮進 rules-fl
   - 抽出全文暫存 scratchpad/local-rules-extracted.txt（session 內有效）
 - 尾盤吃碰之日麻對照（user 提供，2026-07-31）：instagram.com/reel/COT-dSpH3F2（需登入，據 user 補述）——日麻流局未聽有罰（不聽罰符）故尾段仍有吃碰湊聽需求；台麻無此罰、尾盤吃碰只剩干擾價值，是禁令成立的結構性理由。
 - 碰 vs 自摸/惡碰截摸（user 提供，2026-07-31）：youtube.com/watch?v=kBgdfHpoTZQ（遊戲BOY「台灣麻將怎麼鳴牌？碰最大vs假溜？」）——自摸被惡碰截掉的情境；協會成文優先權易位＝喊碰早於自摸動作/意思表示則碰優先、下家摸牌入手無法辨識則摸優先。新增「碰 vs 自摸」條目與過手時點連動。
+- MIGI 常見組合具名描述（user 提供，2026-07-31）：youtube.com/watch?v=EVPzORWVzH4（遊戲BOY「不會麻將算台？台灣牌算台基礎概念告訴你」）——「只玩 migi 沒玩天地聽胡」「玩 migi＋天地胡但沒有天地聽」為常見實際組合；顯示「聽的宣告」與「胡的型」可分開取捨。
