@@ -296,6 +296,7 @@
 
 ### 過水
 
+- 註（本節共通）：過水範例解析影片（含追溯判定）存參——youtube.com/shorts/kgYdq1qHX9k、instagram.com/reel/C5zTbOgSiMk、youtube.com/shorts/zgLkvtOp-0g、youtube.com/shorts/EZ8_53nyWPY（user 提供 2026-08-14，未逐一解析）
 - 過水（詞義辨析）＝本義指「能胡不胡」的**動作**；口語衍生兼指因過水而生的**效力狀態/期間**（不能胡指定牌張、直到解除）——本節「過水範圍」規範的是狀態義的涵蓋範圍、「解過水」規範狀態的解除；動作義/狀態義並收 → glossary 素材
 - 過水範圍：
   1. 封鎖整個聽面、直到解除為止（公開文本大宗，不隨巡自動解除）
